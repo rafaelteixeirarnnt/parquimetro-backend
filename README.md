@@ -16,9 +16,9 @@ opções flexíveis de pagamento e emissão de recibos.
 Antes de executar o projeto, certifique-se de ter instalado as ferramentas a seguir:
 
 * [Git](https://www.git-scm.com/downloads)
+* [Docker](https://docs.docker.com/get-docker/)
 * [Java 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
 * [Maven 3.9.5 ou superior](https://maven.apache.org/download.cgi)
-* [Mongo 7.0 ou superior](https://www.mongodb.com/docs/manual/installation/)
 
 ### Como executar o projeto
 
@@ -33,20 +33,9 @@ cd ./parquimetro-backend
 mvn clean install
 
 # Execute o seguinte comando para iniciar o servidor
-mvn spring-boot:run -Dspring-boot.run.arguments=--spring.data.mongodb.uri=mongodb://localhost:27017/workshop,--spring.data.mongodb.host=root,--spring.data.mongodb.password=root
+mvn spring-boot:run
 
 # Abra o navegador e acesse http://localhost:8080/swagger-ui/index.html
-```
-
-### Variáveis do sistema
-
-Para executar a aplicação localmente, é necessário incluir essas variáveis:
-
-```
-# Executando localmente
-spring.data.mongodb.host=root;
-spring.data.mongodb.password=root;
-spring.data.mongodb.uri=mongodb://localhost:27017/workshop
 ```
 
 ### Tecnologias
