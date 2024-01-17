@@ -4,19 +4,23 @@ import br.com.fiap.tech.challengeii.parquimetrobackend.controller.exception.Cont
 import br.com.fiap.tech.challengeii.parquimetrobackend.dto.CondutorDTO;
 import br.com.fiap.tech.challengeii.parquimetrobackend.entity.Condutor;
 import br.com.fiap.tech.challengeii.parquimetrobackend.repository.CondutorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
+@RequiredArgsConstructor
 public class CondutorService {
     private final CondutorRepository condutorRepository;
 
-    @Autowired
-    public CondutorService(CondutorRepository condutorRepository){
-        this.condutorRepository = condutorRepository;
-    }
+//    @Autowired
+//    public CondutorService(CondutorRepository condutorRepository){
+//        this.condutorRepository = condutorRepository;
+//    }
 
     public Page<CondutorDTO> findAll(Pageable pageable) {
         Page<Condutor> condutores = condutorRepository.findAll(pageable);
@@ -41,15 +45,15 @@ public class CondutorService {
 
     public CondutorDTO update(Long id, CondutorDTO condutorDTO){
         try{
-            Condutor condutor = condutorRepository.getReferenceById(id);
+            Condutor condutor = condutorRepository.findById(id).get();
             condutor.setNome(condutorDTO.nome());
             condutor.setEndereco(condutorDTO.endereco());
             condutor.setEmail(condutorDTO.email());
             condutor.setNumCelular(condutorDTO.numCelular());
 
-            condutor.condutorRepository.save(condutor);
+            condutorRepository.save(condutor);
             return toDTO(condutor);
-        } catch (EntityNotFoundException e) {
+        } catch (Exception e) {
             throw new ControllerNotFoundException("Usuário Não encontrado!!!!!!");
         }
     }

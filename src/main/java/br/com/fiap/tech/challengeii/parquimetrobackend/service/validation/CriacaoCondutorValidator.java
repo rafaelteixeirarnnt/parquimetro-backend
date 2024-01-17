@@ -1,4 +1,4 @@
-package br.com.fiap.tech.challengeii.parquimetrobackend.service.validation;
+/*package br.com.fiap.tech.challengeii.parquimetrobackend.service.validation;
 
 import br.com.fiap.tech.challengeii.parquimetrobackend.dto.CondutorDTO;
 import br.com.fiap.tech.challengeii.parquimetrobackend.entity.Condutor;
@@ -20,4 +20,4 @@ public class CriacaoCondutorValidator implements ConstraintValidator<CriacaoCond
         Optional<Condutor> usuario = rep.findByEmail(dto.email());
         return usuario.isEmpty();
     }
-}
+}*/

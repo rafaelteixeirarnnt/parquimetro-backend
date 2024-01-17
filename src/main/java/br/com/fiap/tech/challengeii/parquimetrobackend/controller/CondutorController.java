@@ -44,7 +44,7 @@ public class CondutorController {
     @PutMapping("/{id}")
     public ResponseEntity<CondutorDTO> update(@PathVariable Long id, @RequestBody CondutorDTO condutorDTO) {
         CondutorDTO updatedCondutor = condutorService.update(id, condutorDTO);
-        return new ResponseEntity.ok(updatedCondutor);
+        return ResponseEntity.ok(updatedCondutor);
     }
 
     @DeleteMapping("/{id}")
