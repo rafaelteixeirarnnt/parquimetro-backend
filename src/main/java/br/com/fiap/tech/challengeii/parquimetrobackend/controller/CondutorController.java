@@ -21,7 +21,7 @@ public class CondutorController {
         this.condutorService = condutorService;
     }
 
-    @GetMapping
+    @GetMapping("/obterTodos")
     public ResponseEntity<Page<CondutorDTO>> findAll(
             @PageableDefault(size = 10, page = 0, sort = "nome")Pageable pageable) {
         Page<CondutorDTO> condutorDTO = condutorService.findAll(pageable);
