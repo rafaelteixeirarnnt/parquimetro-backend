@@ -18,11 +18,11 @@ public class VeiculoController {
         var veiculos = veiculoService.findAll();
         return ResponseEntity.ok(veiculos);
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<Veiculo> findById(@PathVariable Long id) {
-        var veiculos = veiculoService.findById(id);
-        return ResponseEntity.ok(veiculos);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Veiculo> findById(@PathVariable Long id) {
+//        var veiculos = veiculoService.findById(id);
+//        return ResponseEntity.ok(veiculos);
+//    }
     @PostMapping
     public ResponseEntity<Veiculo> save(@RequestBody Veiculo veiculo) {
         veiculo = veiculoService.save(veiculo);
@@ -33,9 +33,9 @@ public class VeiculoController {
         veiculo = veiculoService.update(id, veiculo);
         return ResponseEntity.ok(veiculo);
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        veiculoService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> delete(@PathVariable Long id) {
+//        veiculoService.delete(id);
+//        return ResponseEntity.noContent().build();
+//    }
 }

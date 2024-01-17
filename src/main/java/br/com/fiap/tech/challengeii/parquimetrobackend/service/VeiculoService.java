@@ -1,6 +1,6 @@
 package br.com.fiap.tech.challengeii.parquimetrobackend.service;
 
-import br.com.fiap.tech.challengeii.parquimetrobackend.dto.VeiculoDTO;
+import br.com.fiap.tech.challengeii.parquimetrobackend.controller.exception.ControllerNotFoundException;
 import br.com.fiap.tech.challengeii.parquimetrobackend.entity.Veiculo;
 import org.springframework.beans.factory.annotation.Autowired;
 import br.com.fiap.tech.challengeii.parquimetrobackend.repository.VeiculoRepository;
@@ -15,17 +15,17 @@ public class VeiculoService {
         var veiculos =veiculoRepo.findAll();
         return veiculos;
     }
-    public Veiculo findById(Long id) {
-        Veiculo veiculo = veiculoRepo.findById(id).orElseThrow(() -> new ControllerNotFoundException("Veiculo não encontrado"));
-        return veiculo;
-    }
+//    public Veiculo findById(Long id) {
+//        Veiculo veiculo = veiculoRepo.findById(id).orElseThrow(() -> new ControllerNotFoundException("Veiculo não encontrado"));
+//        return veiculo;
+//    }
     public Veiculo save(Veiculo veiculo){
         veiculo = veiculoRepo.save(veiculo);
         return veiculo;
     }
     public Veiculo update(Long id, Veiculo veiculo) {
         try {
-            Veiculo buscarVeiculo = veiculoRepo.findAll().get(id);
+            Veiculo buscarVeiculo = veiculoRepo.findAll().get(0);
 
             buscarVeiculo.setPlaca(veiculo.getPlaca());
             buscarVeiculo.setAno(veiculo.getAno());
@@ -36,11 +36,11 @@ public class VeiculoService {
 
             return buscarVeiculo;
 
-        } catch (EntityNotFoundException e){
+        } catch (Exception e){
             throw new ControllerNotFoundException("Veículo não encontrado");
         }
     }
-    public void delete(Long id) {
-        veiculoRepo.delete(id);
-    }
+//    public void delete(Long id) {
+//        veiculoRepo.deleteById(id);
+//    }
 }
