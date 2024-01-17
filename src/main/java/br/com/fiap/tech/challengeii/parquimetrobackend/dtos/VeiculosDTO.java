@@ -1,4 +1,4 @@
-package br.com.fiap.tech.challengeii.parquimetrobackend.dto;
+package br.com.fiap.tech.challengeii.parquimetrobackend.dtos;
 
 import lombok.Getter;
 import lombok.Setter;

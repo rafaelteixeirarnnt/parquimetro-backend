@@ -6,3 +6,12 @@ spring:
       database: parquimetro
       username: root
       password: root
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
