@@ -1,8 +1,8 @@
 package br.com.fiap.tech.challengeii.parquimetrobackend.service;
 
-import br.com.fiap.tech.challengeii.parquimetrobackend.dto.VeiculosDTO;
-import br.com.fiap.tech.challengeii.parquimetrobackend.entity.Veiculos;
-import br.com.fiap.tech.challengeii.parquimetrobackend.repository.VeiculosRepository;
+import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.VeiculosDTO;
+import br.com.fiap.tech.challengeii.parquimetrobackend.models.Veiculos;
+import br.com.fiap.tech.challengeii.parquimetrobackend.repositories.VeiculosRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

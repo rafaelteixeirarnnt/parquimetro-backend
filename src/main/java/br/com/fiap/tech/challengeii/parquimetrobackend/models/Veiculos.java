@@ -1,4 +1,4 @@
-package br.com.fiap.tech.challengeii.parquimetrobackend.entity;
+package br.com.fiap.tech.challengeii.parquimetrobackend.models;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -18,12 +18,9 @@ public class Veiculos {
 
     @Id
     private String id;
-
     private String placa;
-
     private String ano;
-
     private String modelo;
-
     private String cor;
+
 }

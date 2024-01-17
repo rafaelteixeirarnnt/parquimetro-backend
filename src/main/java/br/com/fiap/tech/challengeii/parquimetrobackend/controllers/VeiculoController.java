@@ -1,7 +1,7 @@
-package br.com.fiap.tech.challengeii.parquimetrobackend.controller;
+package br.com.fiap.tech.challengeii.parquimetrobackend.controllers;
 
-import br.com.fiap.tech.challengeii.parquimetrobackend.dto.VeiculosDTO;
-import br.com.fiap.tech.challengeii.parquimetrobackend.entity.Veiculos;
+import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.VeiculosDTO;
+import br.com.fiap.tech.challengeii.parquimetrobackend.models.Veiculos;
 import br.com.fiap.tech.challengeii.parquimetrobackend.service.VeiculosService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
