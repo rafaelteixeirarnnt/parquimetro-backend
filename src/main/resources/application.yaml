@@ -1,6 +1,8 @@
 spring:
   data:
     mongodb:
-      host:
-      password:
-      uri:
+      host: mongodb
+      port: 27017
+      database: parquimetro
+      username: root
+      password: root
