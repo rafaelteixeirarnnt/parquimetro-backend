@@ -8,19 +8,18 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
-    private StandardError err = new StandardError();
+    private final StandardError err = new StandardError();
 
-    @ExceptionHandler(ControllerNotFoundException.class)
-    public ResponseEntity<StandardError> entityNotFound(ControllerNotFoundException e, HttpServletRequest request){
-        HttpStatus status = HttpStatus.NOT_FOUND;
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<StandardError> entityNotFound(ApplicationException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         err.setTimestamp(LocalDateTime.now());
-        err.setStatus(status.value());
-        err.setError("Entit not found");
+        err.setStatus(status.value()); // TODO: Melhorar
+        err.setError("Entit not found"); // TODO: Melhorar
         err.setMessage(e.getMessage());
         err.setPath(request.getRequestURI());
 
