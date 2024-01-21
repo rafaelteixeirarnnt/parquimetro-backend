@@ -20,7 +20,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -44,7 +43,10 @@ public class CondutoresService {
         condutor.setId(null);
 
         if (Objects.nonNull(condutor.getVeiculos())) {
-            this.veiculosRepository.saveAll(condutor.getVeiculos());
+            List<Veiculos> veiculos = condutor.getVeiculos().stream()
+                    .peek(vei -> vei.setId(null))
+                    .toList();
+            condutor.setVeiculos(this.veiculosRepository.saveAll(veiculos));
         }
 
         return this.mapper.toCondutoresDTO(this.repository.save(condutor));
@@ -81,7 +83,7 @@ public class CondutoresService {
         PageRequest pageRequest = PageRequest.of(paginator.getPage(), paginator.getLinesPerPage());
         Query query = new Query();
 
-        if (Objects.nonNull(paginator) && Objects.nonNull(paginator.getParams())) {
+        if (Objects.nonNull(paginator.getParams())) {
             if (Objects.nonNull(paginator.getParams().get("nome"))) {
                 query.addCriteria(Criteria.where("nome").is(paginator.getParams().get("nome")));
             }
