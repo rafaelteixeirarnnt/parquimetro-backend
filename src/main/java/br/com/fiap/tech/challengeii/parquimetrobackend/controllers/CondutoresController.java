@@ -2,8 +2,8 @@ package br.com.fiap.tech.challengeii.parquimetrobackend.controllers;
 
 import br.com.fiap.tech.challengeii.parquimetrobackend.controllers.exception.ApplicationException;
 import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.CondutoresDTO;
+import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.FormasPagamentoDTO;
 import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.PaginatorDTO;
-import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.VeiculosDTO;
 import br.com.fiap.tech.challengeii.parquimetrobackend.service.CondutoresService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -112,14 +112,14 @@ public class CondutoresController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/vincular")
-    @Operation(summary = "Vincular veículos ao condutor")
+    @PutMapping("/{id}/cadastrar-formas-pagamento")
+    @Operation(summary = "Serviço responsável por cadastrar as formas de pagamento do condutor")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Veículo vinculado", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "200", description = "Formas de pagamento cadastradas", useReturnTypeSchema = true),
             @ApiResponse(responseCode = "404", description = "Condutor não localizado"),
     })
-    public ResponseEntity<Void> vincularVeiculo(@Valid @RequestBody List<VeiculosDTO> dtos, @PathVariable String id) {
-        this.condutoresService.vincularVeiculo(id, dtos);
+    public ResponseEntity<Void> vincularVeiculo(@Valid @RequestBody List<FormasPagamentoDTO> dtos, @PathVariable String id) {
+        this.condutoresService.cadastrarFormasPagamento(id, dtos);
         return ResponseEntity.noContent().build();
     }
 

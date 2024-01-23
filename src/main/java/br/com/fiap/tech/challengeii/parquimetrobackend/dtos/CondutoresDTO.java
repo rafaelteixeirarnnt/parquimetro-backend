@@ -24,5 +24,6 @@ public record CondutoresDTO(
         @Email(message = "Informe um e-mail válido") String email,
         @NotNull @NotBlank @Length(min = 11, max = 11, message = "O telefone do condutor deve ter 11 caracteres sem caracteres especiais")
         String celular,
-        @Valid List<VeiculosDTO> veiculos) {
+        @Valid List<VeiculosDTO> veiculos,
+        List<FormasPagamentoDTO> formasPagamentos) {
 }

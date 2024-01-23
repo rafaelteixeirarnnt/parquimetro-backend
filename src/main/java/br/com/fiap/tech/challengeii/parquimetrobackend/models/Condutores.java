@@ -33,6 +33,6 @@ public class Condutores {
     private List<Veiculos> veiculos;
 
     @DBRef
-    private List<FormasPagamento> pagamentos;
+    private List<FormasPagamento> formasPagamentos;
 
 }
