@@ -39,14 +39,15 @@ public class CondutoresService {
         if (condutoresOptional.isPresent()) {
             throw new ApplicationException("Usuário já cadastrado");
         }
-        Condutores condutor = this.mapper.toCondutores(dto);
+        var condutor = this.mapper.toCondutores(dto);
         condutor.setId(null);
 
         if (Objects.nonNull(condutor.getVeiculos())) {
-            List<Veiculos> veiculos = condutor.getVeiculos().stream()
+            var veiculos = condutor.getVeiculos().stream()
                     .peek(vei -> vei.setId(null))
                     .toList();
-            condutor.setVeiculos(this.veiculosRepository.saveAll(veiculos));
+            var veiculosSalvos = this.veiculosRepository.saveAll(veiculos);
+            condutor.setVeiculos(veiculosSalvos);
         }
 
         return this.mapper.toCondutoresDTO(this.repository.save(condutor));
@@ -63,6 +64,8 @@ public class CondutoresService {
         update.set("celular", dto.celular());
         update.set("endereco", dto.endereco());
         update.set("dtNascimento", dto.dtNascimento());
+
+//        update.set("veiculos", dto.veiculos());
 
         this.mongoTemplate.updateFirst(query, update, Condutores.class);
 

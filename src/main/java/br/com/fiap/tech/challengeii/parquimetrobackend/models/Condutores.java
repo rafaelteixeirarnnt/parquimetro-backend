@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -32,5 +31,8 @@ public class Condutores {
 
     @DBRef
     private List<Veiculos> veiculos;
+
+    @DBRef
+    private List<FormasPagamento> pagamentos;
 
 }
