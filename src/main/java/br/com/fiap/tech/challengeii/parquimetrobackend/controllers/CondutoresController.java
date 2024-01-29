@@ -111,16 +111,4 @@ public class CondutoresController {
         this.condutoresService.deletarCondutor(id);
         return ResponseEntity.noContent().build();
     }
-
-    @PutMapping("/{id}/cadastrar-formas-pagamento")
-    @Operation(summary = "Serviço responsável por cadastrar as formas de pagamento do condutor")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Formas de pagamento cadastradas", useReturnTypeSchema = true),
-            @ApiResponse(responseCode = "404", description = "Condutor não localizado"),
-    })
-    public ResponseEntity<Void> vincularVeiculo(@Valid @RequestBody List<FormasPagamentoDTO> dtos, @PathVariable String id) {
-        this.condutoresService.cadastrarFormasPagamento(id, dtos);
-        return ResponseEntity.noContent().build();
-    }
-
 }

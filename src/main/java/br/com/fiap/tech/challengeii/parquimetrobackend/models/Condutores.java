@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Condutores {
     private String id;
     private String nome;
     private String cpf;
-    private LocalDateTime dtNascimento;
+    private LocalDate dtNascimento;
     private String endereco;
     private String email;
     private String celular;

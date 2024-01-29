@@ -20,8 +20,8 @@ public class FormasPagamento {
     private String id;
 
     private TipoPagamentoEnum tipoPagamento;
-    private String agencia;
-    private String conta;
+    private String numeroCartao;
+    private String numeroCVC;
     private String chavesPix;
 
     @DBRef

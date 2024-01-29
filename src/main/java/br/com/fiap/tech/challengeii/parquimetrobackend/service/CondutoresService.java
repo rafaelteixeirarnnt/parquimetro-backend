@@ -4,17 +4,13 @@ import br.com.fiap.tech.challengeii.parquimetrobackend.controllers.exception.App
 import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.CondutoresDTO;
 import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.FormasPagamentoDTO;
 import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.PaginatorDTO;
-import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.VeiculosDTO;
 import br.com.fiap.tech.challengeii.parquimetrobackend.enums.TipoPagamentoEnum;
 import br.com.fiap.tech.challengeii.parquimetrobackend.mappers.CondutoresMapper;
 import br.com.fiap.tech.challengeii.parquimetrobackend.mappers.FormasPagamentoMapper;
-import br.com.fiap.tech.challengeii.parquimetrobackend.mappers.VeiculosMapper;
 import br.com.fiap.tech.challengeii.parquimetrobackend.models.Condutores;
 import br.com.fiap.tech.challengeii.parquimetrobackend.models.FormasPagamento;
-import br.com.fiap.tech.challengeii.parquimetrobackend.models.Veiculos;
 import br.com.fiap.tech.challengeii.parquimetrobackend.repositories.CondutorRepository;
 import br.com.fiap.tech.challengeii.parquimetrobackend.repositories.FormasPagamentoRepository;
-import br.com.fiap.tech.challengeii.parquimetrobackend.repositories.VeiculosRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,8 +33,6 @@ public class CondutoresService {
 
     private final CondutoresMapper mapper;
     private final MongoTemplate mongoTemplate;
-    private final VeiculosMapper veiculosMapper;
-    private final VeiculosRepository veiculosRepository;
     private final CondutorRepository repository;
     private final FormasPagamentoMapper formasPagamentoMapper;
     private final FormasPagamentoRepository formasPagamentoRepository;
@@ -50,14 +44,6 @@ public class CondutoresService {
         }
         var condutor = this.mapper.toCondutores(dto);
         condutor.setId(null);
-
-        if (Objects.nonNull(condutor.getVeiculos())) {
-            var veiculos = condutor.getVeiculos().stream()
-                    .peek(vei -> vei.setId(null))
-                    .toList();
-            var veiculosSalvos = this.veiculosRepository.saveAll(veiculos);
-            condutor.setVeiculos(veiculosSalvos);
-        }
 
         return this.mapper.toCondutoresDTO(this.repository.save(condutor));
     }
@@ -73,8 +59,6 @@ public class CondutoresService {
         update.set("celular", dto.celular());
         update.set("endereco", dto.endereco());
         update.set("dtNascimento", dto.dtNascimento());
-
-//        update.set("veiculos", dto.veiculos());
 
         this.mongoTemplate.updateFirst(query, update, Condutores.class);
 
@@ -106,7 +90,10 @@ public class CondutoresService {
 
         query.with(pageRequest);
         long total = this.mongoTemplate.count(query, Condutores.class);
-        List<CondutoresDTO> condutores = mongoTemplate.find(query, Condutores.class).stream().map(this.mapper::toCondutoresDTO).toList();
+        List<CondutoresDTO> condutores = mongoTemplate.find(query, Condutores.class)
+                                                      .stream()
+                                                      .map(this.mapper::toCondutoresDTO)
+                                                      .toList();
         return PageableExecutionUtils.getPage(condutores, pageRequest, () -> total);
     }
 
@@ -116,54 +103,6 @@ public class CondutoresService {
         }
         var condutor = this.repository.findById(id).orElseThrow(() -> new ApplicationException("Condutor não localizado"));
         this.repository.delete(condutor);
-    }
-
-    public void vincularVeiculo(String id, List<VeiculosDTO> dtos) {
-        if (Objects.isNull(id) || id.isBlank()) {
-            throw new ApplicationException("Parâmetro informado inválido");
-        }
-
-        List<Veiculos> veiculos = dtos.stream().map(this.veiculosMapper::toVeiculos)
-                .peek(vei -> vei.setId(null))
-                .toList();
-
-        var condutor = this.repository.findById(id).orElseThrow(() -> new ApplicationException("Condutor não localizado"));
-
-        if (Objects.nonNull(condutor.getVeiculos())) {
-            List<Veiculos> veiculosASalvar = dtos
-                    .stream().filter(v -> !condutor.getVeiculos().stream().map(Veiculos::getPlaca).toList().contains(v.placa()))
-                    .toList().stream().map(this.veiculosMapper::toVeiculos).toList();
-            List<Veiculos> veiculosAAtualizar = dtos
-                    .stream().filter(v -> condutor.getVeiculos().stream().map(Veiculos::getPlaca).toList().contains(v.placa()))
-                    .toList().stream().map(this.veiculosMapper::toVeiculos)
-                    .toList();
-            List<Veiculos> veiculosRemovidos = condutor.getVeiculos().stream().filter(v -> !dtos.stream().map(VeiculosDTO::placa).toList().contains(v.getPlaca())).toList();
-
-            List<Veiculos> veiculosSalvo = this.veiculosRepository.saveAll(veiculosASalvar.stream()
-                    .peek(vei -> vei.setId(null))
-                    .toList());
-
-            List<Veiculos> veiculosAtualizados = this.veiculosRepository.saveAll(veiculosAAtualizar);
-            this.veiculosRepository.deleteAll(veiculosRemovidos);
-
-            veiculosSalvo.addAll(veiculosAtualizados);
-
-            Update update = new Update();
-            update.set("veiculos", veiculosSalvo);
-
-            Query query = new Query(Criteria.where("_id").is(id));
-
-            this.mongoTemplate.updateFirst(query, update, Condutores.class);
-
-        } else {
-            this.veiculosRepository.saveAll(veiculos);
-            Update update = new Update();
-            update.set("veiculos", veiculos);
-
-            Query query = new Query(Criteria.where("_id").is(id));
-
-            this.mongoTemplate.updateFirst(query, update, Condutores.class);
-        }
     }
 
     public void cadastrarFormasPagamento(String id, List<FormasPagamentoDTO> dtos) {
@@ -184,19 +123,16 @@ public class CondutoresService {
 
                 formasPagamentoAux = new ArrayList<>();
 
-                formasPagamentoAgrupadas.forEach((tipoPagamento, formaPagamento) -> {
+                formasPagamentoAgrupadas.forEach((tipoPagamento, formasPagamento) -> {
                     switch (tipoPagamento) {
                         case PIX -> {
-                            var formasPagamentosPix = iniciarFormaPagamentoPix(tipoPagamento, formaPagamento);
+                            var formasPagamentosPix = iniciarFormaPagamentoPix(tipoPagamento, formasPagamento);
                             var formasPagamentoSalvas = this.formasPagamentoRepository.saveAll(formasPagamentosPix);
                             formasPagamentoAux.addAll(formasPagamentoSalvas);
                         }
                         case CREDITO, DEBITO -> {
-                            var formasPagamentosDebitoCredito = formaPagamento.stream()
-                                    .filter(distinctByKey(fp -> fp.getAgencia() + fp.getConta()))
-                                    .collect(Collectors.toList());
-                            formasPagamentosDebitoCredito = iniciarListaCreditoDebito(formasPagamentosDebitoCredito);
-                            var formasPagamentoSalvas = this.formasPagamentoRepository.saveAll(formasPagamentosDebitoCredito);
+                            var formasPagamentosCreditoDebito = iniciarFormaPagamentoCreditoDebito(tipoPagamento, formasPagamento);
+                            var formasPagamentoSalvas = this.formasPagamentoRepository.saveAll(formasPagamentosCreditoDebito);
                             formasPagamentoAux.addAll(formasPagamentoSalvas);
                         }
                     }
@@ -208,30 +144,50 @@ public class CondutoresService {
             } else {
 
                 formasPagamentoAux = new ArrayList<>();
+                List<FormasPagamento> formasPagamentoDeletar = new ArrayList<>();
+                List<FormasPagamento> formasPagamentoParaAtualizar = new ArrayList<>();
 
-                formasPagamentoAgrupadas.forEach((tipoPagamento, formaPagamento) -> {
+                formasPagamentoAgrupadas.forEach((tipoPagamento, formasPagamento) -> {
                     switch (tipoPagamento) {
                         case PIX -> {
-                            var formasPagamentosPix = iniciarFormaPagamentoPix(tipoPagamento, formaPagamento);
-                            var formasPagamentoSalvas = this.formasPagamentoRepository.saveAll(formasPagamentosPix);
-                            formasPagamentoAux.addAll(formasPagamentoSalvas);
+                            var chavesPix = condutor.getFormasPagamentos().stream().map(FormasPagamento::getChavesPix).toList();
+                            var chavesNaoSalva = formasPagamento.stream()
+                                    .filter(fp -> Objects.isNull(fp.getId()))
+                                    .filter(fp -> chavesPix.contains(fp.getChavesPix())).toList();
+                            var chavesParaAtualizar = formasPagamento.stream().filter(fp -> Objects.nonNull(fp.getId()))
+                                    .filter(fp -> !chavesPix.contains(fp.getChavesPix())).toList();
+
+                            var idsChaves = formasPagamento.stream().map(FormasPagamento::getId).distinct().toList();
+                            var chavesDeletar = condutor.getFormasPagamentos().stream().filter(fp -> Objects.nonNull(fp.getId()))
+                                    .filter(fp -> !idsChaves.contains(fp.getId()))
+                                    .toList();
+                            formasPagamentoAux.addAll(chavesNaoSalva);
+                            formasPagamentoParaAtualizar.addAll(chavesParaAtualizar);
+                            formasPagamentoDeletar.addAll(chavesDeletar);
                         }
-                        case CREDITO, DEBITO -> {
-                            var formasPagamentosDebitoCredito = formaPagamento.stream()
-                                    .filter(distinctByKey(fp -> fp.getAgencia() + fp.getConta()))
-                                    .collect(Collectors.toList());
-                            formasPagamentosDebitoCredito = iniciarListaCreditoDebito(formasPagamentosDebitoCredito);
-                            var formasPagamentoSalvas = this.formasPagamentoRepository.saveAll(formasPagamentosDebitoCredito);
-                            formasPagamentoAux.addAll(formasPagamentoSalvas);
-                        }
+//                        case CREDITO, DEBITO -> {
+//                            var formasPagamentosCreditoDebito = iniciarFormaPagamentoCreditoDebito(tipoPagamento, formasPagamento);
+//                            var formasPagamentoSalvas = this.formasPagamentoRepository.saveAll(formasPagamentosCreditoDebito);
+//                            formasPagamentoAux.addAll(formasPagamentoSalvas);
+//                        }
                     }
                 });
-                condutor.setFormasPagamentos(formasPagamentoAux);
-
+                var formasPagamentos = this.formasPagamentoRepository.saveAll(formasPagamentoAux);
+                condutor.setFormasPagamentos(formasPagamentos);
+                if (!formasPagamentoParaAtualizar.isEmpty()) {
+                    formasPagamentoParaAtualizar.forEach(fp -> {
+                        Update update = new Update();
+                        update.set("chavesPix", fp.getChavesPix());
+                        Query query = new Query(Criteria.where("_id").is(fp.getId()));
+                        this.mongoTemplate.updateFirst(query, update, FormasPagamento.class);
+                    });
+                }
+                if (!formasPagamentoDeletar.isEmpty()) {
+                    this.formasPagamentoRepository.deleteAll(formasPagamentoDeletar);
+                }
                 this.repository.save(condutor);
             }
         }
-
     }
 
     public static <T> java.util.function.Predicate<T> distinctByKey(java.util.function.Function<? super T, ?> keyExtractor) {
@@ -244,14 +200,26 @@ public class CondutoresService {
                 .map(FormasPagamento::getChavesPix).distinct()
                 .map(chave -> {
                     var fp = new FormasPagamento();
-                    fp.setConta(null);
-                    fp.setAgencia(null);
                     fp.setId(null);
+                    fp.setNumeroCartao(null);
+                    fp.setNumeroCVC(null);
                     fp.setChavesPix(chave);
                     fp.setTipoPagamento(tipoPagamento);
                     return fp;
-                })
-                .toList();
+                }).toList();
+    }
+
+    private List<FormasPagamento> iniciarFormaPagamentoCreditoDebito(TipoPagamentoEnum tipoPagamento, List<FormasPagamento> formaPagamento) {
+        return formaPagamento.stream().filter(f -> f.getTipoPagamento().equals(tipoPagamento))
+                .map(FormasPagamento::getNumeroCartao).distinct()
+                .map(numeroCartao -> {
+                    var fp = new FormasPagamento();
+                    fp.setId(null);
+                    fp.setChavesPix(null);
+                    fp.setNumeroCartao(numeroCartao);
+                    fp.setTipoPagamento(tipoPagamento);
+                    return fp;
+                }).toList();
     }
 
     private List<FormasPagamento> iniciarListaCreditoDebito(List<FormasPagamento> formasPagamentosPix) {
