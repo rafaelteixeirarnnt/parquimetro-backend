@@ -6,9 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,9 +25,15 @@ public class Condutores {
     private String id;
     private String nome;
     private String cpf;
-    private LocalDateTime dtNascimento;
+    private LocalDate dtNascimento;
     private String endereco;
     private String email;
     private String celular;
+
+    @DBRef
+    private List<Veiculos> veiculos;
+
+    @DBRef
+    private List<FormasPagamento> formasPagamentos;
 
 }

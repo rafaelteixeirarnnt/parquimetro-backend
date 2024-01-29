@@ -2,6 +2,7 @@ package br.com.fiap.tech.challengeii.parquimetrobackend.controllers;
 
 import br.com.fiap.tech.challengeii.parquimetrobackend.controllers.exception.ApplicationException;
 import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.CondutoresDTO;
+import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.FormasPagamentoDTO;
 import br.com.fiap.tech.challengeii.parquimetrobackend.dtos.PaginatorDTO;
 import br.com.fiap.tech.challengeii.parquimetrobackend.service.CondutoresService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.List;
 
 import static br.com.fiap.tech.challengeii.parquimetrobackend.utils.ApiUtils.API;
 
@@ -108,5 +111,4 @@ public class CondutoresController {
         this.condutoresService.deletarCondutor(id);
         return ResponseEntity.noContent().build();
     }
-
 }
