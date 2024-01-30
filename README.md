@@ -55,5 +55,5 @@ As seguintes ferramentas foram usadas na construção do projeto:
 Este projeto foi criado por:
 
 * [Elaine]()
-* [Luiz Guilherme]()
+* [Luiz Guilherme](https://www.linkedin.com/in/lzguilhermecp/)
 * [Rafael Teixeira](https://www.linkedin.com/in/rafael-teixeira-79161ab6/)
